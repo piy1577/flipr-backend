@@ -1,27 +1,9 @@
-import { countryCodeToCountryName } from "../data/CountryCodeToCountryName.js";
 import { countryCodes } from "../data/CountryNameToCode.js";
-
+import HotelModel from "../model/Hotel.model.js";
 export const countryNames = async (req, res) => {
-    const url = "https://hotels4.p.rapidapi.com/v2/get-meta-data";
-    const options = {
-        method: "GET",
-        headers: {
-            "X-RapidAPI-Key": process.env.APIKEY,
-            "X-RapidAPI-Host": "hotels4.p.rapidapi.com",
-        },
-    };
-
-    try {
-        const response = await fetch(url, options);
-        const result = await response.json();
-        const country = Object.values(result).map(
-            (item) => countryCodeToCountryName[item.countryCode]
-        );
-        res.status(200).send(country);
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: "Something went wrong" });
-    }
+    const countries = await HotelModel.find();
+    const count = countries.map((item) => item.country);
+    res.status(200).json(count);
 };
 
 export const flight = async (req, res) => {
@@ -45,5 +27,32 @@ export const flight = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: "Something went wrong" });
+    }
+};
+
+export const hotel = async (req, res) => {
+    const { area } = req.body;
+    try {
+        const hotels = await HotelModel.find({ country: area });
+        res.status(200).json(hotels);
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: "Something went wrong" });
+    }
+};
+
+export const hotelById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const hotel = await HotelModel.findById(id);
+        if (hotel) {
+            res.status(200).json(hotel);
+        } else {
+            res.status(400).json({ message: "something went wrong" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ message: "something went wrong" });
     }
 };
