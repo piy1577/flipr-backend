@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { Signup } from "./User.controller.js";
+import { Signup, isLoggedin, login } from "./User.controller.js";
 
 const userRouter = Router();
 
 userRouter.post("/signup", Signup);
-userRouter.post("/login");
+userRouter.post("/login", login);
+userRouter.post("/isloggedin", isLoggedin);
 
 export default userRouter;

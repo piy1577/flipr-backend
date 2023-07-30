@@ -10,7 +10,8 @@ const userSchema = mongoose.Schema({
     phoneNumber: {
         type: Number,
         required: [true, "Phone Number is required"],
-        length: [10, "Phone Number Should be 10 character long"],
+        min: [1000000000, "Phone number should be 10 character long"],
+        max: [9999999999, "Phone number should be 10 character long"],
     },
     email: {
         type: String,
@@ -31,16 +32,19 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-userSchema.statics.login = async (email, password) => {
-    const user = this.findOne({ email });
+userSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({ email });
     if (user) {
+        if (user.password === null) {
+            throw new Error("Use signin with google");
+        }
         if (await bcrypt.compare(password, user.password)) {
             return user;
         } else {
             throw new Error("invalid password");
         }
     } else {
-        throw new Error("invalid email");
+        throw new Error("invalid Email");
     }
 };
 
