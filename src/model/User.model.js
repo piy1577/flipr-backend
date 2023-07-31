@@ -24,6 +24,14 @@ const userSchema = mongoose.Schema({
         required: [true, "Password is required"],
         minLength: [6, "Password should be minimum 6 character long"],
     },
+    favorite: {
+        type: [mongoose.Schema.ObjectId],
+        default: [],
+    },
+    booked: {
+        type: [mongoose.Schema.ObjectId],
+        default: [],
+    },
 });
 
 userSchema.pre("save", async function (next) {

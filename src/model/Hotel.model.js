@@ -17,7 +17,7 @@ const hotelSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    Amenities: {
+    amenities: {
         type: [String],
         required: true,
     },
@@ -25,6 +25,7 @@ const hotelSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    
 });
 
 export default mongoose.model("hotel", hotelSchema);
